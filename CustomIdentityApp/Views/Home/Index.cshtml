@@ -1,0 +1,65 @@
+﻿@model List<User>
+
+@if (User.Identity.IsAuthenticated)
+{
+<form method="post" asp-controller="Home">
+    <div class="btn-toolbar" role="toolbar">
+        <div class="btn-group mr-2" role="group">
+            <input class="btn btn-warning" type="submit" asp-action="Block" value="Block" />
+            <input class="btn btn-success" type="submit" asp-action="Unblock" value="Unblock" />
+            <input class="btn btn-danger" type="submit" asp-action="Delete" value="Delete" />
+        </div>
+    </div>
+
+    <table class="table table-sm table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>
+                    <input type="checkbox" id="selectAll" /> Select all
+                </th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Registered (UTC)</th>
+                <th>Logged In (UTC)</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                <tr>
+                    <td>
+                        <input class="check" asp-for="@Model[i].Checked" />
+                    </td>
+                    <td>
+                        <input asp-for="@Model[i].Id" type="hidden" />
+                        @Model[i].Id
+                    </td>
+                    <td>@Model[i].UserName</td>
+                    <td>@Model[i].Email</td>
+                    <td>@Model[i].Registered</td>
+                    <td>@Model[i].LoggedIn</td>
+                    @if (Model[i].IsBlocked)
+                    {
+                        <td>Blocked</td>
+                    }
+                    else
+                    {
+                        <td>Active</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</form>
+
+    <form method="post" asp-controller="Account" asp-action="Logout">
+        <input type="submit" value="Logout" />
+    </form>
+}
+else
+{
+    <a asp-controller="Account" asp-action="Login">Login</a>
+    <a asp-controller="Account" asp-action="Register">Register</a>
+}
